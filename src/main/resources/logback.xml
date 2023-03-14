@@ -1,6 +1,6 @@
 <configuration>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>tests.log</file>
+        <file>kindle-to-markdown.log</file>
         <append>true</append>
         <encoder>
             <pattern>%date [%p] %logger{35} - %msg%n</pattern>

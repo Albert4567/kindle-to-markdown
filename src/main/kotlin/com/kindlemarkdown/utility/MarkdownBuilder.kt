@@ -18,7 +18,7 @@ class MarkdownBuilder private constructor() {
             logger.warn { "Couldn't create directory $directory: it already exists or some error came up..." }
         }
 
-        val file: File = File(".${File.separator}$directory${File.separator}$fileName.md")
+        val file: File = File(".${File.separator}$directory${File.separator}$fileName - Highlights.md")
 
         logger.info { "Building file content..." }
         var stringBuilder: String = buildString {
@@ -27,7 +27,7 @@ class MarkdownBuilder private constructor() {
                 append(" - ${it.content}")
                 if (!it.note.isNullOrBlank()) {
                     append("\n")
-                    append(" - **Note:** ${it.content}")
+                    append(" - **Note:** ${it.note}")
                 }
                 append("\n")
             }
