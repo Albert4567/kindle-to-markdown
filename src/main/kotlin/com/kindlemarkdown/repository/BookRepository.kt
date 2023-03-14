@@ -1,6 +1,6 @@
-package repository
+package com.kindlemarkdown.repository
 
-import domain.Highlight
+import com.kindlemarkdown.domain.Highlight
 import java.util.LinkedList
 
 class BookRepository private constructor() {

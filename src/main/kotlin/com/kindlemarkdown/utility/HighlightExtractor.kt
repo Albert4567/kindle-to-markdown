@@ -1,8 +1,9 @@
-package utility
+package com.kindlemarkdown.utility
 
-import domain.Highlight
-import repository.BookRepository
-import repository.KindleFileRepository
+import com.kindlemarkdown.domain.Highlight
+import mu.KotlinLogging
+import com.kindlemarkdown.repository.BookRepository
+import com.kindlemarkdown.repository.KindleFileRepository
 import java.util.*
 import kotlin.jvm.Throws
 
@@ -12,9 +13,11 @@ class HighlightExtractor private constructor() {
     }
 
     private val bookRepository: BookRepository = BookRepository.sharedInstance
+    private val logger = KotlinLogging.logger {}
 
     @Throws(IndexOutOfBoundsException::class)
     fun extractHighlights() {
+        logger.info { "Starting highlights extraction..." }
         val highlightSeparator = "=========="
         var highlightsFileContent: String = KindleFileRepository.sharedInstance.read()
 
@@ -24,12 +27,16 @@ class HighlightExtractor private constructor() {
             if (infos.isEmpty())
                 return@forEach
 
-            if (!bookRepository.containsBook(infos.get(0)))
+            if (!bookRepository.containsBook(infos.get(0))) {
+                logger.info { "Found new book: ${infos.get(0)}" }
                 bookRepository.addBook(infos.get(0))
+            }
 
-            if (!infos.isEmpty() && isHighlight(infos.get(1).substringBefore("|"))) {
+            if (isHighlight(infos.get(1).substringBefore("|"))) {
+                logger.info { "Adding highlight to ${infos.get(0)}" }
                 addHighlight(infos.get(0), infos)
             } else {
+                logger.info { "Adding note to ${infos.get(0)}" }
                 bookRepository.addNoteTo(infos.get(0), extractNote(infos))
             }
         }
@@ -46,5 +53,5 @@ class HighlightExtractor private constructor() {
 
     private fun extractNote(noteContainer: List<String>): String = noteContainer.get(2)
 
-    fun isHighlight(infoContainer: String): Boolean = infoContainer.contains("Highlight")
+    private fun isHighlight(infoContainer: String): Boolean = infoContainer.contains("Highlight")
 }
